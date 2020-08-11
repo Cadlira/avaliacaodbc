@@ -10,26 +10,42 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.util.CollectionUtils;
 
 public class DbcDataResult {
+	private static final Log logger = LogFactory.getLog(DbcDataResult.class);
 
 	private Set<DbcData> clients;
 	private Set<DbcData> salesman;
-	private List<DbcData> sales;
+	private Set<DbcData> sales;
 	private Map<String, Double> salesmanTotalSales;
 
 	public DbcDataResult(List<? extends DbcData> dbcDatas) {
-		Map<DbcDataType, List<DbcData>> mapDbcData = getMapDbcDataByType(dbcDatas);
-		this.clients = new HashSet<DbcData>(mapDbcData.get(DbcDataType.CLIENT));
-		this.salesman = new HashSet<DbcData>(mapDbcData.get(DbcDataType.SALESMAN));
-		this.sales = mapDbcData.get(DbcDataType.SALES);
-		populateSalesmanTotalSales();
+		try {
+			Map<DbcDataType, List<DbcData>> mapDbcData = getMapDbcDataByType(dbcDatas);
+			if (!CollectionUtils.isEmpty(mapDbcData)) {
+				if (!CollectionUtils.isEmpty(mapDbcData.get(DbcDataType.CLIENT))) {					
+					this.clients = new HashSet<DbcData>(mapDbcData.get(DbcDataType.CLIENT));
+				}
+				if (!CollectionUtils.isEmpty(mapDbcData.get(DbcDataType.SALESMAN))) {
+					this.salesman = new HashSet<DbcData>(mapDbcData.get(DbcDataType.SALESMAN));
+				}
+				if (!CollectionUtils.isEmpty(mapDbcData.get(DbcDataType.SALES))) {					
+					this.sales = new HashSet<DbcData>(mapDbcData.get(DbcDataType.SALES));
+				}
+			}
+			populateSalesmanTotalSales();
+			
+			logger.debug("Quantidade de clientes: " + this.getClientQuantity());
+			logger.debug("Quantidade de vendedores: " + this.getSalesmanQuantity());
+			logger.debug("Mmelhor id venda: " + this.getMoreExpensiveSalesId());
+			logger.debug("Nome do pior vendedor: " + this.getWorstSalesmanName());	
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
 		
-		System.out.println("Quantidade de clientes: " + this.getClientQuantity());
-		System.out.println("Quantidade de vendedores: " + this.getSalesmanQuantity());
-		System.out.println("Quantidade de melhor id venda: " + this.getMoreExpensiveSalesId());
-		System.out.println("Quantidade de pior vendedor: " + this.getWorstSalesmanName());
 	}
 
 	public long getClientQuantity() {

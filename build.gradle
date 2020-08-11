@@ -14,12 +14,22 @@ repositories {
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-batch'
+	implementation 'org.springframework.boot:spring-boot-configuration-processor'
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {
 		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
 	}
 	testImplementation 'org.springframework.batch:spring-batch-test'
 }
 
+bootJar.dependsOn test
+
 test {
+	group = 'Testes'
 	useJUnitPlatform()
+	afterSuite { desc, result ->       
+        if (desc.className) {
+	        println "Classe de teste -> ${desc.name}: [${result.resultType}]"               
+        }
+    }
+	
 }

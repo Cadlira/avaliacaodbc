@@ -2,9 +2,11 @@ package br.com.leolira.dbc.avaliacao.utils;
 
 import java.io.File;
 
+import br.com.leolira.dbc.avaliacao.config.DbcDirConfig;
+
 public interface Constants {
 	
-	String BASE_DIR = System.getProperty("user.home") + File.separator + "data";
+	String BASE_DIR = DbcDirConfig.BASE_DIR;
 	
 	String IN_DIR = BASE_DIR + File.separator + "in";
 	

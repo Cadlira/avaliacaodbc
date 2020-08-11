@@ -6,6 +6,8 @@ import java.util.Objects;
 
 import javax.annotation.PostConstruct;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.batch.core.configuration.annotation.JobScope;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.MultiResourceItemReader;
@@ -21,7 +23,8 @@ import br.com.leolira.dbc.avaliacao.utils.Constants;
 @Component
 @JobScope
 public class DbcFilesReader extends MultiResourceItemReader<DbcData> {
-
+	private static final Log logger = LogFactory.getLog(DbcFilesReader.class);
+	
 	@PostConstruct
 	private void initializer() {
 		
@@ -32,14 +35,24 @@ public class DbcFilesReader extends MultiResourceItemReader<DbcData> {
 	}
 	
 	private Resource[] getResources() {
+		Resource[] resources = loadResources();
+		resources = removeInvalidFiles(resources);
+		return resources;
+	}
+
+	private Resource[] loadResources() {
 		Resource[] resources = null;
 		PathMatchingResourcePatternResolver patternResolver = new PathMatchingResourcePatternResolver();
 		String filePattern = "file:" + Constants.IN_DIR + "/*.dat"; 
 		try {
 			resources = patternResolver.getResources(filePattern);
 		} catch (IOException e) {
-			e.printStackTrace();
-		} 
+			logger.error("Ocorreu um erro ao carregar os arquivos de analise", e);
+		}
+		return resources;
+	}
+
+	private Resource[] removeInvalidFiles(Resource[] resources) {
 		if (Objects.nonNull(resources) && resources.length > 0) {
 			resources = Arrays.stream(resources).filter(res -> !res.getFilename().endsWith(".done.dat"))
 					.toArray(Resource[]::new);
