@@ -38,7 +38,6 @@ public class DbcWriter implements ItemWriter<DbcData> {
 	@PreDestroy
 	public void teardown() {
 		DbcDataResult result = new DbcDataResult(items);
-
 		Path path = this.getPath();
 		writeResultToFile(result, path);
 		this.items = new ArrayList<DbcData>();
@@ -50,23 +49,38 @@ public class DbcWriter implements ItemWriter<DbcData> {
 			writer = Files.newBufferedWriter(path, Charset.forName("UTF-8"));
 			writer.write(Constants.OUT_FILE_HEADER);
 			writer.newLine();
-			writer.write(getResultLine(result));
+			String value = getResultLine(result);
+			writer.write(value);
+			
+			this.printNewJobExecution(value);
 			
 		} catch (IOException ex) {
 			logger.error("Ocorreu um erro ao escrever o arquivo de resultado", ex);		
-			ex.printStackTrace();
 		} finally {
 			if (Objects.nonNull(writer)) {
 				try {
 					writer.close();
 				} catch (IOException e) {
 					logger.error("Ocorreu um erro ao fechar o arquivo de saida", e);
-					e.printStackTrace();
 				}
 			}
 		}
 	}
 
+	private void printNewJobExecution(String result) {
+		System.out.println("********************************************************");
+		System.out.println("********************************************************");
+		System.out.println("                                                        ");
+		System.out.println("                     RESULTADO                          ");
+		System.out.println("                                                        ");
+		System.out.println("      "+ Constants.OUT_FILE_HEADER +"   ");
+		System.out.println("               "+ result +"              ");
+		System.out.println("                                                        ");
+		System.out.println("                                                        ");
+		System.out.println("**************************************************");
+		System.out.println("**************************************************");
+	}
+	
 	private String getResultLine(DbcDataResult result) {
 		return String.format("%sç%sç%sç%s", result.getClientQuantity(), result.getSalesmanQuantity(),
 				result.getMoreExpensiveSalesId(), result.getWorstSalesmanName());
@@ -79,7 +93,6 @@ public class DbcWriter implements ItemWriter<DbcData> {
 				Files.createDirectories(path);
 			} catch (IOException e) {
 				logger.error("Ocorreu um erro ao criar o diretorio de saida", e);
-				e.printStackTrace();
 			}
 		}
 		return Paths.get(Constants.OUT_FILE_PATH);

@@ -62,8 +62,9 @@ public class DbcFilesReader extends MultiResourceItemReader<DbcData> {
 
 	
 	private FlatFileItemReader<DbcData> reader() {
-		FlatFileItemReader<DbcData> reader = new FlatFileItemReader<DbcData>();
 		
+		FlatFileItemReader<DbcData> reader = new FlatFileItemReader<DbcData>();
+		reader.setEncoding("utf-8");
 		reader.setLineMapper(new DefaultLineMapper<DbcData>() {
 			{
 				setLineTokenizer(new DelimitedLineTokenizer("ç"));
