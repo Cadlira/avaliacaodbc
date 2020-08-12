@@ -52,4 +52,11 @@ public class DbcDataTest {
 		assertEquals("11", result.getMoreExpensiveSalesId());
 		
 	}
+	
+	@Test
+	public void testMaxSalesPriceOfEmptyList() {
+		List<DbcData> datas = new ArrayList<DbcData>();
+		DbcDataResult result = new DbcDataResult(datas);
+		assertEquals("", result.getWorstSalesmanName());
+	}
 }

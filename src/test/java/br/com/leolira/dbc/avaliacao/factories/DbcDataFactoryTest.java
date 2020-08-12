@@ -78,7 +78,7 @@ public class DbcDataFactoryTest {
 		assertEquals("10", ((DbcDataSales)data).getId());
 		assertEquals(2, ((DbcDataSales)data).getItens().size());
 		assertEquals("Vendedor Test", ((DbcDataSales)data).getSalesmanName());
-		assertEquals(55.5, ((DbcDataSales)data).getTotal());
+		assertEquals(555.0, ((DbcDataSales)data).getTotal());
 	}	
 	@Test
 	public void givenIncompleteDataOfTypeSales() {
@@ -92,7 +92,7 @@ public class DbcDataFactoryTest {
 		assertEquals("10", ((DbcDataSales)data).getId());
 		assertEquals(2, ((DbcDataSales)data).getItens().size());
 		assertEquals("Vendedor Test", ((DbcDataSales)data).getSalesmanName());
-		assertEquals(55.5, ((DbcDataSales)data).getTotal());
+		assertEquals(555.0, ((DbcDataSales)data).getTotal());
 	}
 	
 	@Test

@@ -11,6 +11,7 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import br.com.leolira.dbc.avaliacao.batch.DbcBatchSkipper;
 import br.com.leolira.dbc.avaliacao.models.DbcData;
 import br.com.leolira.dbc.avaliacao.readers.DbcFilesReader;
 import br.com.leolira.dbc.avaliacao.writers.DbcWriter;
@@ -30,10 +31,12 @@ public class BatchConfig extends DefaultBatchConfigurer {
 	}
 	
 	@Bean
-	public Step step(DbcFilesReader reader, DbcWriter writer) {
-		return stepBuilderFactory.get("step1")
-			.<DbcData, DbcData>chunk(5)
+	public Step step(DbcFilesReader reader, DbcWriter writer, DbcBatchSkipper skipper) {
+		return stepBuilderFactory.get("loadData -> analyze -> writeResult")
+			.<DbcData, DbcData>chunk(20)
 			.reader(reader)
+			.faultTolerant()
+			.skipPolicy(skipper)
 			.writer(writer)
 			.build();
 	}
