@@ -15,13 +15,6 @@ Sendo assim estruturei o projeto da seguinte forma:
 Separei as responsabilidades de cada trecho do código em pacotes. Visto que o Spring batch utilizar os conceitos de "jobs", "steps", "readers" e "writers", ficando o job e o step(devido a simplicidade foi necessário apenas um step) no pacote de configuração do processo e o reader e o writer em seus respectivos pacotes. No pacote models ficam os POJOs e as classes de negócio referentes ao modelo, como a classe "DbcDataResult". Neste pacote podemos observar a utilização de alguns princípios como o "DRY". Para a criação dos objetos do pacote de models foi criado um factory, que tem como objetivo simplificar e centralizar a criação dessas instâncias. Por fim temos o pacote de services que contem o serviço responsável por escutar alterações na pasta selecionada e disparar a execução do job responsável por ler os arquivos de análise e geração do arquivo de resultados.
 O projeto em si foi dividido em dois pacotes com o objetivo de separar os dois exercícios propostos, e dentro desses pacotes foram criados outros pacotes de forma a haver uma separação mais clara entre as camadas de cada exercício.
 
-_____
-
-###### Anotações:
-______
-
-Inicialmente comecei a implementação do projeto utilizando práticas de TDD na classe de factory dos modelos, contudo tive alguns problemas  quando tentei utilizar essa prática na implementação da estrutura do Spring batch, visto que muita das suas implementações são internas fazendo com que fosse necessário implementar várias classes apenas para conseguir realizar os testes antes, quebrando desta forma os princípios do "YAGNI" e do "KISS". Por este motivo, decidi criar alguns testes depois para validar as funcionalidades.
-
 ____
 ###### Como executar:
 ___
